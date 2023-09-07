@@ -4,14 +4,11 @@ pipeline {
    
     tools {
        
-        maven 'Maven-Tool'
+        maven 'Maven tool'
        
     }
    
-    environment {
-           
-            IP_ADDRESS = "172.31.89.210"
-        }
+   
    
     stages {
        
@@ -19,7 +16,7 @@ pipeline {
            
             steps {
                
-                git url: 'https://github.com/Shahid199578/firstrepo.git'
+                git branch: 'main', url:'https://github.com/Utkarsh2107/project12.git'
                
             }
            

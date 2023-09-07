@@ -1,71 +1,23 @@
 pipeline {
-   
     agent any
-   
     tools {
-       
         maven 'Maven tool'
-       
     }
-   
-   
-   
     stages {
-       
-        stage ("Git Checkout") {
-           
+        stage("Git Checkout") {
             steps {
-               
-                git branch: 'main', url:'https://github.com/Utkarsh2107/project12.git'
-               
+                git branch:'main', url: 'https://github.com/Utkarsh2107/project12.git'
             }
-           
         }
-       
-        stage ("Maven Build") {
-           
+        stage("Maven Build") {
             steps {
-               
                 sh "mvn clean package"
-               
             }
         }
-       
-        stage ("Upload War File") {
-           
+        stage("Archive Artifact") {
             steps {
-                sh 'sudo cp target/*.war /opt/apache-tomcat-9.0.76/webapps'               
-                          
-            }           
-        }
-       
-        stage ("Upload-Artifact") {
-           
-            steps {
-               
-                script {
-                   
-                    def mavenPom = readMavenPom file: 'pom.xml'
-                   
-                    nexusArtifactUploader artifacts: [
-                        [
-                            artifactId: "${mavenPom.artifactId}",
-                            classifier: '',
-                            file: "target/${mavenPom.artifactId}.war",
-                            type: "${mavenPom.packaging}"
-                        ]
-                    ],
-                        credentialsId: 'nexus3',
-                        groupId: "${mavenPom.groupId}",
-                        nexusUrl: "${env.IP_ADDRESS}:8081",
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        repository: 'Nexus-Pipeline/',
-                        version: "${mavenPom.version}"                   
-                }
-               
+                archiveArtifacts 'target/*.war'
             }
-           
-        }       
+        }
     }
 }
